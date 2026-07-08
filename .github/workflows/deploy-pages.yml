@@ -1,4 +1,4 @@
-name: Deploy catalog site
+name: Commit catalog site files
 
 on:
   push:
@@ -6,38 +6,40 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 concurrency:
-  group: pages
+  group: publish-files
   cancel-in-progress: true
 
 jobs:
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+  publish-files:
+    if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
     runs-on: ubuntu-latest
     steps:
-      - name: Configure Pages
-        uses: actions/configure-pages@v5
-        with:
-          enablement: true
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Download site archive
+      - name: Download and unpack site
         run: |
           curl -L --fail --retry 3 --output site.zip "https://tmpfiles.org/dl/w2wX3KnccsiM/mechanik-github-pages.zip"
-          mkdir site
-          unzip -q site.zip -d site
-          test -f site/index.html
+          mkdir /tmp/site
+          unzip -q site.zip -d /tmp/site
+          test -f /tmp/site/index.html
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: site
+      - name: Replace repository content
+        run: |
+          find . -mindepth 1 \
+            ! -path './.git' ! -path './.git/*' \
+            ! -path './.github' ! -path './.github/*' \
+            -exec rm -rf {} +
+          cp -R /tmp/site/. .
+          touch .nojekyll
 
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Commit site files
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Publish catalog site files [skip ci]" || exit 0
+          git push
