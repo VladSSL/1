@@ -179,6 +179,10 @@ img {
   max-width: 580px;
 }
 
+.home-copy > .eyebrow {
+  margin-left: 10px;
+}
+
 .eyebrow {
   margin: 0 0 12px;
   color: var(--accent);
@@ -356,7 +360,7 @@ h2 {
   grid-template-columns: minmax(0, 1fr);
   gap: 24px;
   align-items: end;
-  width: min(1180px, calc(100% - 32px));
+  width: min(1120px, calc(100% - 24px));
   margin: 0 auto;
   padding: clamp(28px, 5vw, 70px) 0 24px;
 }
