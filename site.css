@@ -142,6 +142,10 @@ img {
   gap: 8px;
 }
 
+.sticky-action-bar {
+  display: none;
+}
+
 .header-action {
   display: grid;
   min-height: 58px;
@@ -444,6 +448,22 @@ h2 {
     gap: 6px;
   }
 
+  .document-header > .header-actions {
+    display: none;
+  }
+
+  .sticky-action-bar {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    padding: 8px;
+    border-bottom: 1px solid var(--soft-line);
+    background: rgba(255, 255, 255, 0.96);
+    backdrop-filter: blur(18px);
+  }
+
   .header-action {
     padding: 0 6px;
     font-size: clamp(10px, 2.8vw, 13px);
@@ -482,6 +502,7 @@ h2 {
 
 @media print {
   .site-header,
+  .sticky-action-bar,
   .document-hero,
   .contacts-band,
   .document-page figcaption {
