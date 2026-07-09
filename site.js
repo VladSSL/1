@@ -57,6 +57,18 @@ function navHtml(activeKey) {
     .join("");
 }
 
+function actionBarHtml(doc, extraClass = "", label = "Контакты и PDF") {
+  const className = `header-actions${extraClass ? ` ${extraClass}` : ""}`;
+
+  return `
+    <div class="${className}" aria-label="${label}">
+      <a class="header-action" href="${CONTACT.href}">${CONTACT.label}</a>
+      <a class="header-action header-action-primary" href="${CONTACT.href}">Оставить заявку</a>
+      <a class="header-action" href="${doc.pdfHref}" download="${doc.downloadFileName}">Скачать PDF</a>
+    </div>
+  `;
+}
+
 function renderDocument() {
   const app = document.querySelector("#document-app");
 
@@ -101,12 +113,10 @@ function renderDocument() {
         ${navHtml(key)}
       </nav>
 
-      <div class="header-actions" aria-label="Контакты и PDF">
-        <a class="header-action" href="${CONTACT.href}">${CONTACT.label}</a>
-        <a class="header-action header-action-primary" href="${CONTACT.href}">Оставить заявку</a>
-        <a class="header-action" href="${doc.pdfHref}" download="${doc.downloadFileName}">Скачать PDF</a>
-      </div>
+      ${actionBarHtml(doc)}
     </header>
+
+    ${actionBarHtml(doc, "sticky-action-bar", "Быстрые действия")}
 
     <section class="document-hero" aria-labelledby="document-title">
       <div>
